@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reto 3 · Modela y resuelve</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#1b0f3d;--bg2:#3a1568;--card:#26183f;--accent:#ffd166;--teal:#2ec4b6;--pink:#ff6b9d;--text:#f4f1ff;--sub:#c8bfe8;}
+*{box-sizing:border-box;}
+body{margin:0;background:linear-gradient(160deg,var(--bg1),var(--bg2));font-family:'Nunito',Arial,sans-serif;color:var(--text);overflow-x:hidden;}
+.blob{position:fixed;border-radius:50%;filter:blur(40px);opacity:.35;z-index:0;animation:float 9s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(20px,-24px) scale(1.08)}}
+.wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:26px 16px 60px;}
+
+.hero{text-align:center;}
+.mascot{width:110px;animation:wave 2.6s ease-in-out infinite;}
+@keyframes wave{0%,100%{transform:rotate(-3deg) translateY(0)}50%{transform:rotate(3deg) translateY(-8px)}}
+.badge{display:inline-block;background:var(--accent);color:#4a2c00;font-family:'Baloo 2';font-weight:800;
+padding:8px 26px;border-radius:24px;font-size:clamp(26px,8vw,40px);letter-spacing:1px;margin:8px 0;
+transform:rotate(-3deg);box-shadow:0 7px 0 #c98f00,0 12px 20px rgba(0,0,0,.35);animation:badgeBounce 2.4s ease-in-out infinite;}
+@keyframes badgeBounce{0%,100%{transform:rotate(-3deg) translateY(0)}50%{transform:rotate(-1deg) translateY(-6px)}}
+h1{font-family:'Baloo 2';font-size:clamp(20px,5.2vw,27px);margin:4px 0 8px;font-weight:800;}
+.sub{color:var(--sub);font-size:14px;max-width:460px;margin:0 auto;line-height:1.55;}
+.motiv{font-family:'Baloo 2';font-weight:700;color:var(--accent);font-size:14px;max-width:420px;
+margin:10px auto 0;transform:rotate(-1deg);}
+
+.chips{display:flex;justify-content:center;gap:10px;margin:26px 0 6px;flex-wrap:wrap;}
+.chip{font-family:'Baloo 2';font-weight:700;font-size:13px;padding:8px 18px;border-radius:20px;cursor:pointer;
+border:2px solid transparent;background:rgba(255,255,255,.08);color:var(--text);transition:transform .2s ease,background .2s ease;user-select:none;}
+.chip:hover{transform:translateY(-2px);}
+.chip.active[data-f="ova"]{background:var(--teal);color:#00332e;}
+.chip.active[data-f="ovi"]{background:var(--pink);color:#4a0022;}
+.hint{text-align:center;color:var(--sub);font-size:12px;margin:4px 0 18px;opacity:.85;}
+
+.mason{display:grid;grid-template-columns:1fr;gap:46px 18px;padding-top:34px;align-items:start;}
+@media(min-width:560px){.mason{grid-template-columns:1fr 1fr;}}
+.card{position:relative;margin:0;perspective:900px;cursor:pointer;
+opacity:0;animation:pop .5s ease forwards;}
+@keyframes pop{from{opacity:0;transform:scale(.9) rotate(var(--rot,0deg))}to{opacity:1;transform:scale(1) rotate(var(--rot,0deg))}}
+.card.hide{display:none;}
+.flip{position:relative;width:100%;height:100%;transition:transform .5s cubic-bezier(.4,.2,.2,1);
+transform-style:preserve-3d;transform:rotate(var(--rot,-1deg));}
+.card:hover .flip{transform:rotate(0deg) translateY(-5px) scale(1.03);}
+.card.flipped .flip{transform:rotateY(180deg);}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;padding:18px 16px 14px;
+box-shadow:0 8px 18px rgba(0,0,0,.28);display:flex;flex-direction:column;}
+.front{background:var(--card);}
+.mascot-ic{position:absolute;right:6px;top:-26px;width:96px;height:96px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));animation:bobIc 3s ease-in-out infinite;}
+@keyframes bobIc{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-6px) rotate(3deg)}}
+.back{background:var(--accB,var(--teal));transform:rotateY(180deg);align-items:flex-start;justify-content:center;}
+.front h3{font-size:14px;margin:26px 0 6px;font-weight:800;line-height:1.32;padding-right:74px;}
+.tag{font-size:10px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-top:8px;}
+.back h4{margin:0 0 8px;font-size:13px;font-weight:800;color:#12241f;}
+.back a{display:inline-block;background:#12241f;color:#fff;text-decoration:none;font-size:12px;font-weight:800;
+padding:8px 14px;border-radius:10px;}
+.back a:hover{transform:scale(1.05);}
+.back .tap2{position:absolute;bottom:10px;right:14px;font-size:10px;color:#12241f;opacity:.6;}
+
+.footer{text-align:center;margin-top:40px;}
+.footer p{color:var(--sub);font-size:14px;line-height:1.6;}
+.footer .stamp{display:inline-block;margin-top:8px;font-family:'Baloo 2';font-weight:700;color:var(--accent);
+transform:rotate(-2deg);animation:pulse 2.2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:rotate(-2deg) scale(1)}50%{transform:rotate(-2deg) scale(1.08)}}
+</style>
+</head>
+<body>
+<div class="blob" style="width:260px;height:260px;background:#2ec4b6;top:-60px;left:-60px;"></div>
+<div class="blob" style="width:220px;height:220px;background:#ff6b9d;top:40%;right:-70px;animation-delay:2s;"></div>
+<div class="blob" style="width:200px;height:200px;background:#ffd166;bottom:-40px;left:10%;animation-delay:4s;"></div>
+
+<div class="wrap">
+  <div class="hero">
+    <svg class="mascot" viewBox="0 0 140 150" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="70" cy="140" rx="34" ry="6" fill="#000" opacity=".15"/>
+      <path d="M28 60 Q10 46 18 24 Q34 34 38 52Z" fill="#ffd166"/>
+      <path d="M112 60 Q130 46 122 24 Q106 34 102 52Z" fill="#ff6b9d"/>
+      <ellipse cx="70" cy="76" rx="52" ry="56" fill="#2ec4b6"/>
+      <circle cx="50" cy="70" r="20" fill="#fff"/><circle cx="90" cy="70" r="20" fill="#fff"/>
+      <circle cx="50" cy="70" r="9" fill="#1b0f3d"/><circle cx="90" cy="70" r="9" fill="#1b0f3d"/>
+      <circle cx="47" cy="66" r="3" fill="#fff"/><circle cx="87" cy="66" r="3" fill="#fff"/>
+      <path d="M60 60 L70 68 L80 60" stroke="#1b0f3d" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M50 98 Q70 114 90 98" stroke="#1b0f3d" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M18 84 Q4 90 10 106 Q22 104 28 92Z" fill="#2ec4b6"/>
+      <path d="M122 84 Q136 90 130 106 Q118 104 112 92Z" fill="#2ec4b6"/>
+      <rect x="24" y="120" width="92" height="20" rx="10" fill="#ffd166" transform="rotate(-3 70 130)"/>
+      <text x="70" y="134" text-anchor="middle" font-size="13" font-weight="800" fill="#4a2c00" font-family="Nunito,Arial" transform="rotate(-3 70 130)">∑ π ∞</text>
+    </svg>
+    <div class="badge">🎮 RETO 3</div>
+    <h1>Modela y resuelve:<br>Pensamiento matemático</h1>
+    <p class="sub">El reto propone que integres y apliques conceptos fundamentales del pensamiento matemático —teoría de conjuntos, razonamiento cuantitativo, análisis e interpretación de datos y resolución de ecuaciones de primer grado— para enfrentar y resolver situaciones problema contextualizadas en entornos reales.</p>
+    <p class="motiv">✨ ¡Confía en lo que ya sabes, un recurso a la vez, tú puedes lograrlo! ✨</p>
+  </div>
+
+  <div class="chips">
+    <div class="chip active" data-f="ova">📦 OVAS</div>
+    <div class="chip" data-f="ovi">🎬 OVIS</div>
+  </div>
+  <div class="hint">toca una tarjeta para voltearla</div>
+
+  <div class="mason" id="mason"></div>
+
+  <div class="footer">
+    <p>Recórrelas con calma y llega listo para el Reto 3.</p>
+    <div class="stamp">¡Tú puedes! 🏅</div>
+  </div>
+</div>
+
+<script>
+const ovas=[
+["🌌","Conjuntos y razonamiento lenguaje lógico","https://repository.unad.edu.co/handle/10596/70114"],
+["🧩","Aplicación de la teoría de conjuntos","https://repository.unad.edu.co/handle/10596/53852"],
+["📊","Graficando operaciones entre conjuntos","https://repository.unad.edu.co/handle/10596/53130"],
+["🔎","Analizando datos","https://repository.unad.edu.co/handle/10596/70138"],
+["🎲","Jugando con conjuntos: descubre sus operaciones","https://repository.unad.edu.co/handle/10596/76346"],
+["🗂️","Agrupamos o desagrupamos","https://repository.unad.edu.co/handle/10596/79538"],
+["🔐","La ecuación oculta: resuelve y decide","https://repository.unad.edu.co/handle/10596/82843"]];
+const ovis=[
+["📐","Application of set theory","https://repository.unad.edu.co/handle/10596/56663"],
+["⚖️","OVI Proporcionalidad","https://repository.unad.edu.co/handle/10596/42457"],
+["🔢","Pensamiento numérico","https://repository.unad.edu.co/handle/10596/70100"],
+["🧠","Conjuntos y razonamiento cuantitativo","https://repository.unad.edu.co/handle/10596/70104"],
+["📈","Análisis e interpretación de datos estadísticos","https://repository.unad.edu.co/handle/10596/76345"],
+["🩺","Lógica matemática y riesgos en salud","https://repository.unad.edu.co/handle/10596/80966"],
+["➗","Razones y proporciones","https://repository.unad.edu.co/handle/10596/73885"]];
+const teal="#2ec4b6",pink="#ff6b9d";
+const rots=[-1.2,1,-0.8,1.2,-1,0.8,-1.2,1];
+const heights=[150,150,150,150,150,150,150];
+const ink="#1b0f3d";
+const S=`stroke="${ink}" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"`;
+const props=[
+`<circle cx="-3" cy="0" r="5" ${S}/><circle cx="3" cy="0" r="5" ${S}/>`,
+`<circle cx="-3" cy="0" r="5" fill="${ink}" opacity=".18"/><circle cx="-3" cy="0" r="5" ${S}/><circle cx="3" cy="0" r="5" ${S}/>`,
+`<rect x="-7" y="-1" width="3" height="7" fill="${ink}"/><rect x="-1.5" y="-6" width="3" height="12" fill="${ink}"/><rect x="4" y="-3" width="3" height="9" fill="${ink}"/>`,
+`<circle cx="-2" cy="-2" r="5" ${S}/><line x1="2" y1="2" x2="7" y2="7" ${S}/>`,
+`<rect x="-6" y="-6" width="12" height="12" rx="2.5" ${S}/><circle cx="-3" cy="-3" r="1.2" fill="${ink}"/><circle cx="0" cy="0" r="1.2" fill="${ink}"/><circle cx="3" cy="3" r="1.2" fill="${ink}"/>`,
+`<path d="M-7 -4 L-2 -4 L0 -1 L7 -1 L7 6 L-7 6 Z" ${S}/>`,
+`<rect x="-5" y="-1" width="10" height="8" rx="1.5" ${S}/><path d="M-3 -1 v-3 a3 3 0 0 1 6 0 v3" ${S}/>`,
+`<circle cx="-3" cy="0" r="5" fill="${ink}" opacity=".18"/><circle cx="-3" cy="0" r="5" ${S}/><circle cx="3" cy="0" r="5" ${S}/>`,
+`<line x1="0" y1="-7" x2="0" y2="6" ${S}/><line x1="-7" y1="-4" x2="7" y2="-4" ${S}/><path d="M-7 -4 l-2.5 5 h5Z" ${S}/><path d="M7 -4 l-2.5 5 h5Z" ${S}/>`,
+`<rect x="-7" y="-3" width="14" height="6" rx="1" ${S}/><line x1="-3.5" y1="-3" x2="-3.5" y2="0" ${S}/><line x1="0" y1="-3" x2="0" y2="1" ${S}/><line x1="3.5" y1="-3" x2="3.5" y2="0" ${S}/>`,
+`<path d="M-6 2 Q-8 -6 -1 -6 Q1 -8 4 -6 Q8 -5 6 0 Q8 4 3 5 Q0 7 -3 5 Q-7 6 -6 2Z" ${S}/>`,
+`<polyline points="-7,4 -2,-2 2,2 7,-5" ${S}/><circle cx="7" cy="-5" r="1.4" fill="${ink}"/>`,
+`<path d="M0 5 C-6 0 -6 -6 0 -3 C6 -6 6 0 0 5Z" ${S}/>`,
+`<circle cx="0" cy="-4" r="1.5" fill="${ink}"/><line x1="-6" y1="0" x2="6" y2="0" ${S}/><circle cx="0" cy="4" r="1.5" fill="${ink}"/>`
+];
+function mascotIcon(prop,bg,i){
+  const t1=i%2?"#ffd166":"#ff6b9d", t2=i%2?"#ff6b9d":"#ffd166";
+  const eye=i%3===0?`<path d="M21 34 Q26 28 31 34" ${S}/><path d="M39 34 Q44 28 49 34" ${S}/>`:
+    `<circle cx="26" cy="34" r="9" fill="#fff"/><circle cx="44" cy="34" r="9" fill="#fff"/><circle cx="${i%2?28:24}" cy="35" r="4" fill="${ink}"/><circle cx="${i%2?46:42}" cy="35" r="4" fill="${ink}"/>`;
+  return `<svg class="mascot-ic" viewBox="0 0 80 80" width="96" height="96" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 30 Q2 20 8 8 Q18 14 20 26Z" fill="${t1}"/><path d="M60 30 Q68 20 62 8 Q52 14 50 26Z" fill="${t2}"/>
+    <circle cx="35" cy="38" r="28" fill="${bg}"/>${eye}
+    <path d="M27 49 Q35 56 43 49" stroke="${ink}" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="55" cy="55" r="18" fill="#fff" stroke="${bg}" stroke-width="2.5"/>
+    <g transform="translate(55,55) scale(1.3)">${prop}</g></svg>`;
+}
+function zip(a){return {icon:a[0],title:a[1],url:a[2]};}
+const mason=document.getElementById("mason");
+const items=[...ovas.map(x=>({...zip(x),cat:"ova",label:"OVA",bg:teal})),
+             ...ovis.map(x=>({...zip(x),cat:"ovi",label:"OVI",bg:pink}))];
+let html="";
+items.forEach((it,i)=>{
+  html+=`<div class="card" data-cat="${it.cat}" style="--rot:${rots[i%rots.length]}deg;height:${it.title.length>34?150:128}px;margin-top:${i%2?14:0}px;animation-delay:${i*0.06}s">
+    <div class="flip">
+      <div class="face front">
+        ${mascotIcon(props[i],it.bg,i)}
+        <h3>${it.title}</h3>
+        <div class="tag">${it.label}</div>
+      </div>
+      <div class="face back" style="--accB:${it.bg};">
+        <h4>${it.title}</h4>
+        <a href="${it.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Abrir recurso →</a>
+        <span class="tap2">toca para volver</span>
+      </div>
+    </div>
+  </div>`;
+});
+mason.innerHTML=html;
+mason.addEventListener("click",e=>{
+  const c=e.target.closest(".card");
+  if(c) c.classList.toggle("flipped");
+});
+document.querySelectorAll(".chip").forEach(ch=>{
+  ch.addEventListener("click",()=>{
+    document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
+    ch.classList.add("active");
+    const f=ch.dataset.f;
+    document.querySelectorAll(".card").forEach(c=>{
+      c.classList.remove("flipped");
+      c.classList.toggle("hide", c.dataset.cat!==f);
+    });
+  });
+});
+document.querySelector('.chip[data-f="ova"]').click();
+</script>
+</body>
+</html>
